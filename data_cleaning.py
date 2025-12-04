@@ -1,3 +1,4 @@
+# This script takes in data and cleans it by removing whitespaces, handling missing values, and standardizing column names
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -5,7 +6,7 @@ from pathlib import Path
 csv_file_path = Path('C:/Users/silly/Downloads/sales_data_raw.csv')
 data = pd.read_csv(csv_file_path)
 
-# This function puts all column titles as lowercase (thanks copilot!)
+# This function puts all column titles as lowercase because it is easier to read (thanks copilot!)
 def column_standardization_lowercase(df: pd.DataFrame) -> pd.DataFrame:
 	"""Standardize column names by converting them to lowercase.
 	
@@ -22,7 +23,7 @@ data = column_standardization_lowercase(data)
 # Strip whitespace from column names
 data.columns = data.columns.str.strip()
 
-# This function removes the whitespaces from product name and categories 
+# This function removes the whitespaces from product name and categories because they can cause issues when analyzing data
 def Whitespace_removal(df: pd.DataFrame) -> pd.DataFrame:
 	"""Strip leading and trailing whitespace from prodname and category columns.
 	
@@ -42,7 +43,7 @@ def Whitespace_removal(df: pd.DataFrame) -> pd.DataFrame:
 
 data = Whitespace_removal(data)
 
-
+# This function removes rows with negative prices or quantities because negative values do not work with python
 def row_removal(df: pd.DataFrame) -> pd.DataFrame:
 	"""Remove rows with negative prices or negative quantities.
 	
@@ -77,7 +78,7 @@ def row_removal(df: pd.DataFrame) -> pd.DataFrame:
 
 data = row_removal(data)
 
-
+# This function puts "Missing" for missing values and "0" for missing price and quantities and its necessary because missing values can cause issues when analyzing data
 def handle_missing_values(df: pd.DataFrame) -> pd.DataFrame:
 	"""Handle missing values in price, quantity, and date_sold columns.
 	
@@ -120,3 +121,19 @@ print(data)
 # Save cleaned data to CSV file
 data.to_csv('data/processed/sales_data_clean.csv', index=False)
 print("\nCleaned data saved to data/processed/sales_data_clean.csv")
+
+# Copilot fixed the code provided in Canvas to work with what we made already
+if __name__ == "__main__":
+    raw_path = 'C:/Users/silly/Downloads/sales_data_raw.csv'
+    cleaned_path = "data/processed/sales_data_clean.csv"
+
+    df_raw = pd.read_csv(raw_path)
+    df_clean = column_standardization_lowercase(df_raw)
+    df_clean.columns = df_clean.columns.str.strip()
+    df_clean = Whitespace_removal(df_clean)
+    df_clean = row_removal(df_clean)
+    df_clean = handle_missing_values(df_clean)
+    df_clean = df_clean.astype(str)
+    df_clean.to_csv(cleaned_path, index=False)
+    print("Cleaning complete. First few rows:")
+    print(df_clean.head())
